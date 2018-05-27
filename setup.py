@@ -9,6 +9,11 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
 
+    # I don't know how to specify an empty key in setup.cfg.
+    package_data={
+        '': ['version.txt', 'LICENSE*', 'README*'],
+    },
+
     # I need this to be dynamic.
     version=(
         pathlib.Path(__file__)

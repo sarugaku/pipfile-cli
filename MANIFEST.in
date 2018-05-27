@@ -1,2 +1,2 @@
 include README.rst
-include src/pipfile_cli/version.txt
+recursive-include src/pipfile_cli LICENSE* README* version.txt
