@@ -3,3 +3,4 @@ pipfile-cli = {path = ".", editable = true}
 
 [dev-packages]
 invoke = "*"
+wheel = "*"
