@@ -1,0 +1,2 @@
+[packages]
+pipfile-cli = {path = ".", editable = true}
