@@ -11,11 +11,13 @@ import requirementslib
 from .vendor.pipfile import Pipfile
 
 
-DEFAULT_SOURCE = {
-    'name': 'pypi',
-    'url': 'https://pypi.org/simple',
-    'verify_ssl': True,
-}
+DEFAULT_SOURCES = [
+    {
+        'name': 'pypi',
+        'url': 'https://pypi.org/simple',
+        'verify_ssl': True,
+    },
+]
 
 logger = logging.getLogger('')
 
@@ -106,7 +108,7 @@ def install(project, no_check, dev):
             )
             click.get_current_context().exit(1)
 
-    indexes = lock.get('sources', [DEFAULT_SOURCE])
+    indexes = lock.get('sources', DEFAULT_SOURCES)
     packages = lock.get('default', {})
     if dev and 'develop' in lock:
         packages.update(lock['develop'])
@@ -132,7 +134,6 @@ def install(project, no_check, dev):
             'pip', 'install', '-r', requirements_txt.name,
         ]
         logger.info(str(pip_cmd))
-        return
         try:
             subprocess.run(pip_cmd, check=True)
         except subprocess.CalledProcessError as e:
