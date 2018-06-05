@@ -87,7 +87,7 @@ def cli():
 @click.option(
     '--dev', is_flag=True, default=False,
 )
-def install(project, no_check, dev):
+def sync(project, no_check, dev):
     with project.lockfile_path.open() as f:
         lock = json.load(f)
 
