@@ -37,6 +37,16 @@ class NothingToDo(ValueError):
     pass
 
 
+def dump_requirement_line(f, name, data):
+    requirement = requirementslib.Requirement.from_pipfile(
+        name=name, indexes=indexes, pipfile=data,
+    )
+    line = requirement.as_line(include_index=True)
+    logger.debug(line)
+    f.write(line)
+    f.write('\n')
+
+
 class PipError(EnvironmentError):
     def __init__(self, returncode):
         super().__init__(returncode)
@@ -52,21 +62,14 @@ def sync(lock, dev):
     if not packages:
         raise NothingToDo()
 
-    lines = []
-    for name, data in packages.items():
-        requirement = requirementslib.Requirement.from_pipfile(
-            name=name, indexes=indexes, pipfile=data,
-        )
-        line = requirement.as_line()
-        logger.debug(line)
-        lines.append(line)
-
     with tempfile.NamedTemporaryFile('w+') as requirements_txt:
-        requirements_txt.write('\n'.join(lines))
+        for name, data in packages.items():
+            dump_requirement_line(requirements_txt, name=name, data=data)
         requirements_txt.flush()
+
         pip_cmd = [
-            sys.executable, '-m',
-            'pip', 'install', '-r', requirements_txt.name,
+            sys.executable, '-m', 'pip', 'install',
+            '--no-deps', '--requirement', requirements_txt.name,
         ]
         logger.info(str(pip_cmd))
         try:
